@@ -80,12 +80,20 @@
 				border: none;
 				filter: invert(100%);
 			}
+			p:has(+ .presets) {
+				margin-top: 2rem;
+			}
+			.presets {
+				margin-top: 0;
+				display: inline-block;
+				text-align: left;
+			}
 		</style>
 	</head>
 	<body>
 		<div class="configuator">
 			<h1>Czechitas přestávka</h1>
-			<p>Přichystejte si vlastní přestávkový slide.</p>
+			<p>Nastavte si vlastní přestávkový slide.</p>
 			<form class="controls">
 				<label>
 					Identifikátor:
@@ -104,6 +112,31 @@
 					>Přejít do nastavení odpočtu</a
 				>
 			</div>
+			<p>Nebo použijte už předchystaný.</p>
+			<ul class="presets">
+				<li><a href="?seconds=60">1 minuta</a></li>
+				<li><a href="?seconds=120">2 minuty</a></li>
+				<li><a href="?seconds=300">5 minut</a></li>
+				<li><a href="?seconds=420">7 minut</a></li>
+				<li><a href="?seconds=600">10 minut</a></li>
+				<li><a href="?seconds=900">15 minut</a></li>
+				<li><a href="?seconds=1200">20 minut</a></li>
+				<li><a href="?seconds=1800">30 minut</a></li>
+				<li><a href="?seconds=2700">45 minut</a></li>
+				<li><a href="?seconds=3600">hodina</a></li>
+				<li>
+					<form>
+						<input
+							name="seconds"
+							type="number"
+							step="1"
+							min="1"
+							placeholder="Sekundy"
+						/>
+						<button type="submit">Vlastní</button>
+					</form>
+				</li>
+			</ul>
 		</div>
 		<div class="slide">
 			<div class="slide_in">
@@ -124,14 +157,25 @@
 				`czechitas-${encodeURIComponent(identificator)}`
 			const urlParameters = new URLSearchParams(window.location.search)
 			const identificator = urlParameters.get('id')
+			const seconds = (() => {
+				const number = parseInt(urlParameters.get('seconds') ?? '')
+				if (Number.isNaN(number) || number <= 0) {
+					return null
+				}
+				return number
+			})()
 			const configuator = document.querySelector('.configuator')
 
-			if (identificator) {
+			const showIframe = (url) => {
 				configuator.remove()
 				const countdown = document.querySelector('.countdown')
-				countdown.src = `https://just-countdown.eu/screen?id=${urlIdentificator(
-					identificator,
-				)}`
+				countdown.src = `https://just-countdown.eu${url}`
+			}
+
+			if (identificator) {
+				showIframe(`/screen?id=${urlIdentificator(identificator)}`)
+			} else if (seconds) {
+				showIframe(`/run?seconds=${seconds}`)
 			} else {
 				const identificatorInput = document.querySelector('.identificator')
 				identificatorInput.value =
