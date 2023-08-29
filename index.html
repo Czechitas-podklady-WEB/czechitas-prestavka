@@ -134,10 +134,13 @@
 				)}`
 			} else {
 				const identificatorInput = document.querySelector('.identificator')
+				identificatorInput.value =
+					localStorage.getItem('identificator') ?? identificatorInput.value
 
 				const handleChange = () => {
 					const identificator = identificatorInput.value
 					const settingsLink = document.querySelector('.settings_link')
+					localStorage.setItem('identificator', identificator)
 					settingsLink.href = identificator
 						? `https://just-countdown.eu/control?id=${urlIdentificator(
 								identificator,
