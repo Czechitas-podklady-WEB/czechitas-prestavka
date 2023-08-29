@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="cs">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Czechitas přestávka</title>
+		<meta
+			name="description"
+			content="Nástroj pro vytváření přestávkových slidů."
+		/>
+		<meta name="color-scheme" content="light dark" />
+		<meta
+			name="theme-color"
+			media="(prefers-color-scheme: light)"
+			content="white"
+		/>
+		<meta
+			name="theme-color"
+			media="(prefers-color-scheme: dark)"
+			content="black"
+		/>
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta
+			property="og:image"
+			content="https://prestavka.czechitas-podklady.cz/og-image.jpg"
+		/>
+		<link rel="shortcut icon" href="icon.png" />
+		<style>
+			body {
+				font-family: sans-serif;
+				max-width: 40rem;
+				margin-left: auto;
+				margin-right: auto;
+				text-align: center;
+				margin: 0 auto;
+				min-height: 80vh;
+				display: grid;
+				grid-template-rows: 1fr auto 2fr;
+				accent-color: #e6007e;
+			}
+			.configuator {
+				padding: 1em;
+				grid-row: 2;
+			}
+			.settings {
+				margin-top: 0.5rem;
+			}
+			.settings:has(.settings_link[href='']) {
+				visibility: hidden;
+			}
+			.configuator ~ .slide {
+				display: none;
+			}
+			.slide {
+				position: fixed;
+				inset: 0;
+				background-color: #000000;
+				display: grid;
+				align-items: center;
+				justify-items: center;
+			}
+			.slide_in {
+				position: relative;
+				aspect-ratio: 16 / 9;
+				width: min(100%, calc(16 / 9 * 100svh));
+			}
+			.slide .background {
+				position: absolute;
+				inset: 0;
+				width: 100%;
+				height: 100%;
+				border: none;
+			}
+			.slide .countdown {
+				position: absolute;
+				inset: 58% auto auto 0.3%;
+				width: 37.9%;
+				height: 29.9%;
+				border: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="configuator">
+			<h1>Czechitas přestávka</h1>
+			<p>Přichystejte si vlastní přestávkový slide.</p>
+			<form class="controls">
+				<label>
+					Identifikátor:
+					<input
+						class="identificator"
+						value="javascript-1"
+						autocomplete="off"
+						autofocus
+						name="id"
+					/>
+				</label>
+				<button type="submit">Zobrazit odpočet</button>
+			</form>
+			<div class="settings">
+				<a href="" class="settings_link" target="_blank"
+					>Přejít do nastavení odpočtu</a
+				>
+			</div>
+		</div>
+		<div class="slide">
+			<div class="slide_in">
+				<iframe
+					class="background"
+					src="https://intro.czechitas-podklady.cz/slide.html?title=P%C5%99est%C3%A1vka"
+				></iframe>
+				<iframe
+					class="countdown"
+					src="https://just-countdown.eu/screen?id=break"
+					allowtransparency
+				></iframe>
+			</div>
+		</div>
+
+		<script>
+			const urlIdentificator = (identificator) =>
+				`czechitas-${encodeURIComponent(identificator)}`
+			const urlParameters = new URLSearchParams(window.location.search)
+			const identificator = urlParameters.get('id')
+			const configuator = document.querySelector('.configuator')
+
+			if (identificator) {
+				configuator.remove()
+				const countdown = document.querySelector('.countdown')
+				countdown.src = `https://just-countdown.eu/screen?id=${urlIdentificator(
+					identificator,
+				)}`
+			} else {
+				const identificatorInput = document.querySelector('.identificator')
+
+				const handleChange = () => {
+					const identificator = identificatorInput.value
+					const settingsLink = document.querySelector('.settings_link')
+					settingsLink.href = identificator
+						? `https://just-countdown.eu/control?id=${urlIdentificator(
+								identificator,
+						  )}`
+						: ''
+				}
+				handleChange()
+
+				identificatorInput.addEventListener('input', handleChange)
+			}
+		</script>
+	</body>
+</html>
