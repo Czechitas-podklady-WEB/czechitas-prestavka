@@ -99,17 +99,17 @@
 					Identifikátor:
 					<input
 						class="identificator"
-						value="javascript-1"
+						value="czechitas-javascript-1"
 						autocomplete="off"
 						autofocus
 						name="id"
 					/>
 				</label>
-				<button type="submit">Zobrazit odpočet</button>
 			</form>
 			<div class="settings">
-				<a href="" class="settings_link" target="_blank"
-					>Přejít do nastavení odpočtu</a
+				<a href="" class="settings_link settings_link-show">Zobrazit odpočet</a>
+				<a href="" class="settings_link settings_link-control"
+					>Ovládat odpočet</a
 				>
 			</div>
 			<p>Nebo použijte už předchystaný.</p>
@@ -154,7 +154,7 @@
 
 		<script>
 			const urlIdentificator = (identificator) =>
-				`czechitas-${encodeURIComponent(identificator)}`
+				`${encodeURIComponent(identificator)}`
 			const urlParameters = new URLSearchParams(window.location.search)
 			const identificator = urlParameters.get('id')
 			const seconds = (() => {
@@ -183,9 +183,15 @@
 
 				const handleChange = () => {
 					const identificator = identificatorInput.value
-					const settingsLink = document.querySelector('.settings_link')
+					const settingsLinkShow = document.querySelector('.settings_link-show')
+					const settingsLinkControl = document.querySelector(
+						'.settings_link-control',
+					)
 					localStorage.setItem('identificator', identificator)
-					settingsLink.href = identificator
+					settingsLinkShow.href = identificator
+						? `?id=${urlIdentificator(identificator)}`
+						: ''
+					settingsLinkControl.href = identificator
 						? `https://just-countdown.eu/control?id=${urlIdentificator(
 								identificator,
 						  )}`
