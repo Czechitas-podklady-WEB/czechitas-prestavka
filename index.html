@@ -74,12 +74,25 @@
 				border: none;
 			}
 			.slide .countdown {
+				visibility: hidden;
+			}
+			.slide .countdown_text {
 				position: absolute;
-				inset: 58% auto auto 0.3%;
+				inset: 62% auto auto 0.3%;
 				width: 37.9%;
 				height: 29.9%;
-				border: none;
-				filter: invert(100%);
+				color: #ffffff;
+				font-feature-settings: 'tnum';
+				font-variant-numeric: tabular-nums;
+				font-family: Open Sans, sans-serif;
+				--base: 11.4;
+				font-size: 11.4vw; /* OBS fallback */
+				font-size: calc(1vw * var(--base));
+			}
+			@media (min-aspect-ratio: 16 / 9) {
+				.slide .countdown_text {
+					font-size: calc(1vh * var(--base) * 16 / 9);
+				}
 			}
 			p:has(+ .presets) {
 				margin-top: 2rem;
@@ -150,6 +163,7 @@
 					src="https://just-countdown.eu/screen?id=break"
 					allowtransparency
 				></iframe>
+				<div class="countdown_text"></div>
 			</div>
 		</div>
 
@@ -167,10 +181,21 @@
 			})()
 			const configuator = document.querySelector('.configuator')
 
-			const showIframe = (url) => {
+			const showIframe = (path) => {
 				configuator.remove()
 				const countdown = document.querySelector('.countdown')
-				countdown.src = `https://just-countdown.eu${url}`
+				const countdownText = document.querySelector('.countdown_text')
+				const url = new URL(`https://just-countdown.eu${path}`)
+				countdown.src = url.toString()
+
+				window.addEventListener('message', (event) => {
+					if (
+						event.origin === url.origin &&
+						typeof event.data.formattedTime === 'string'
+					) {
+						countdownText.textContent = event.data.formattedTime
+					}
+				})
 			}
 
 			if (identificator) {
