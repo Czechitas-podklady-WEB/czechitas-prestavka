@@ -193,7 +193,11 @@
 						event.origin === url.origin &&
 						typeof event.data.formattedTime === 'string'
 					) {
-						countdownText.textContent = event.data.formattedTime
+						const minutes = Math.floor(event.data.remainingTimeInSeconds / 60)
+						const seconds = event.data.remainingTimeInSeconds % 60
+						countdownText.textContent = `${minutes
+							.toString()
+							.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 					}
 				})
 			}
