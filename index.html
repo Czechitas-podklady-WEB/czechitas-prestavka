@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="cs" theme="dark">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,32 +26,39 @@
 			content="https://prestavka.czechitas-podklady.cz/og-image.jpg"
 		/>
 		<link rel="shortcut icon" href="icon.png" />
+		<link
+			href="library/materialize-v2.0.3-alpha/materialize/css/materialize.min.css"
+			rel="stylesheet"
+			type="text/css"
+		/>
+		<script>
+			const media = window.matchMedia('(prefers-color-scheme: dark)')
+			const updateAttribute = () => {
+				document.documentElement.setAttribute(
+					'theme',
+					media.matches ? 'dark' : 'light',
+				)
+			}
+			updateAttribute()
+			media.addEventListener('change', updateAttribute)
+		</script>
+		<script src="library/materialize-v2.0.3-alpha/materialize/js/materialize.min.js"></script>
+		<link
+			href="https://fonts.googleapis.com/icon?family=Material+Icons"
+			rel="stylesheet"
+		/>
 		<style>
 			body {
-				font-family: sans-serif;
-				max-width: 40rem;
-				margin-left: auto;
-				margin-right: auto;
-				text-align: center;
-				margin: 0 auto;
-				min-height: 80vh;
-				display: grid;
-				grid-template-rows: 1fr auto 2fr;
-				accent-color: #e6007e;
+				padding-block: 5rem;
+			}
+			#settings_link-show[href=''],
+			#settings_link-control[href=''] {
+				visibility: hidden;
 			}
 			.logo {
-				max-width: 6rem;
+				max-width: 1em;
 				height: auto;
-			}
-			.configuator {
-				padding: 1em;
-				grid-row: 2;
-			}
-			.settings {
-				margin-top: 0.5rem;
-			}
-			.settings:has(.settings_link[href='']) {
-				visibility: hidden;
+				margin-bottom: -0.15em;
 			}
 			.configuator ~ .slide {
 				display: none;
@@ -86,6 +93,7 @@
 				width: 37.9%;
 				height: 29.9%;
 				color: #ffffff;
+				text-align: center;
 				font-feature-settings: 'tnum';
 				font-variant-numeric: tabular-nums;
 				font-family: Open Sans, sans-serif;
@@ -98,77 +106,102 @@
 					font-size: calc(1vh * var(--base) * 16 / 9);
 				}
 			}
-			p:has(+ .presets) {
-				margin-top: 2rem;
-			}
-			.presets {
-				margin-top: 0;
-				display: inline-block;
-				text-align: left;
-			}
 		</style>
 	</head>
 	<body>
-		<div class="configuator">
-			<img src="icon.png" alt="" width="512" height="512" class="logo" />
-			<h1>Czechitas přestávka</h1>
-			<p>Nastavte si vlastní přestávkový slide.</p>
-			<form class="controls">
-				<label>
-					Identifikátor:
-					<input
-						class="identificator"
-						value="czechitas-javascript-1"
-						autocomplete="off"
-						autofocus
-						name="id"
-					/>
-				</label>
-			</form>
-			<div class="settings">
-				<a href="" class="settings_link settings_link-show">Zobrazit odpočet</a>
-				<a href="" class="settings_link settings_link-control"
-					>Ovládat odpočet</a
-				>
+		<div class="container">
+			<div class="configuator">
+				<h1>
+					<img src="icon.png" alt="" width="512" height="512" class="logo" />
+					Czechitas přestávka
+				</h1>
+				<h5 class="mt-6 mb-5">Nastavte si vlastní přestávkový slide:</h5>
+				<form class="controls row" style="gap: 5px; align-items: center">
+					<div class="col s12">
+						<div class="input-field">
+							<input
+								id="identificator"
+								type="text"
+								autocomplete="off"
+								autofocus
+								name="id"
+								value="czechitas-javascript-1"
+							/>
+							<label for="identificator">Identifikátor</label>
+						</div>
+					</div>
+					<div class="col s12 center-align">
+						<div class="settings">
+							<a
+								href=""
+								class="waves-effect waves-light btn"
+								id="settings_link-show"
+								><i class="material-icons left">visibility</i> Zobrazit
+								odpočet</a
+							>
+							<a
+								href=""
+								class="waves-effect waves-light btn"
+								id="settings_link-control"
+								><i class="material-icons left">settings</i> Ovládat odpočet</a
+							>
+						</div>
+					</div>
+				</form>
+				<h5 class="mt-6 mb-5">Nebo použijte už předchystaný:</h5>
+				<div class="collection">
+					<a class="collection-item" href="?seconds=60">1 minuta</a>
+					<a class="collection-item" href="?seconds=120">2 minuty</a>
+					<a class="collection-item" href="?seconds=300">5 minut</a>
+					<a class="collection-item" href="?seconds=420">7 minut</a>
+					<a class="collection-item" href="?seconds=600">10 minut</a>
+					<a class="collection-item" href="?seconds=900">15 minut</a>
+					<a class="collection-item" href="?seconds=1200">20 minut</a>
+					<a class="collection-item" href="?seconds=1800">30 minut</a>
+					<a class="collection-item" href="?seconds=2700">45 minut</a>
+					<a class="collection-item" href="?seconds=3600">60 minut (1 hodina)</a
+					><a class="collection-item" href="?seconds=3600"
+						>120 minut (2 hodiny)</a
+					>
+					<div class="collection-item">
+						<form class="row" style="gap: 5px; align-items: center">
+							<div class="col s4">
+								<div class="input-field">
+									<input
+										id="seconds"
+										name="seconds"
+										type="number"
+										step="1"
+										min="1"
+									/>
+									<label for="seconds">Vlastní [s]</label>
+								</div>
+							</div>
+							<div class="col s8">
+								<button
+									type="submit"
+									class="waves-effect waves-light btn-large"
+								>
+									<i class="material-icons left">visibility</i> Spustit
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
 			</div>
-			<p>Nebo použijte už předchystaný.</p>
-			<ul class="presets">
-				<li><a href="?seconds=60">1 minuta</a></li>
-				<li><a href="?seconds=120">2 minuty</a></li>
-				<li><a href="?seconds=300">5 minut</a></li>
-				<li><a href="?seconds=420">7 minut</a></li>
-				<li><a href="?seconds=600">10 minut</a></li>
-				<li><a href="?seconds=900">15 minut</a></li>
-				<li><a href="?seconds=1200">20 minut</a></li>
-				<li><a href="?seconds=1800">30 minut</a></li>
-				<li><a href="?seconds=2700">45 minut</a></li>
-				<li><a href="?seconds=3600">hodina</a></li>
-				<li>
-					<form>
-						<input
-							name="seconds"
-							type="number"
-							step="1"
-							min="1"
-							placeholder="Sekundy"
-						/>
-						<button type="submit">Vlastní</button>
-					</form>
-				</li>
-			</ul>
-		</div>
-		<div class="slide">
-			<div class="slide_in">
-				<iframe
-					class="background"
-					src="https://intro.czechitas-podklady.cz/slide.html?title=P%C5%99est%C3%A1vka"
-				></iframe>
-				<iframe
-					class="countdown"
-					src="https://just-countdown.eu/screen?id=break"
-					allowtransparency
-				></iframe>
-				<div class="countdown_text"></div>
+			<div class="slide">
+				<div class="slide_in">
+					<iframe
+						class="background"
+						src="https://intro.czechitas-podklady.cz/slide.html?title=P%C5%99est%C3%A1vka"
+					></iframe>
+					<iframe
+						class="countdown"
+						src="https://just-countdown.eu/screen?id=break"
+						allowtransparency
+					></iframe>
+					<div class="countdown_text"></div>
+				</div>
 			</div>
 		</div>
 
@@ -212,15 +245,15 @@
 			} else if (seconds) {
 				showIframe(`/run?seconds=${seconds}`)
 			} else {
-				const identificatorInput = document.querySelector('.identificator')
+				const identificatorInput = document.querySelector('#identificator')
 				identificatorInput.value =
 					localStorage.getItem('identificator') ?? identificatorInput.value
 
 				const handleChange = () => {
 					const identificator = identificatorInput.value
-					const settingsLinkShow = document.querySelector('.settings_link-show')
+					const settingsLinkShow = document.querySelector('#settings_link-show')
 					const settingsLinkControl = document.querySelector(
-						'.settings_link-control',
+						'#settings_link-control',
 					)
 					localStorage.setItem('identificator', identificator)
 					settingsLinkShow.href = identificator
